@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 
 import './Node.css';
+import MainCharacter from '../Character/MainCharacter';
+import Enemy from '../Character/Enemy';
 
 export default class Node extends Component {
   render() {
@@ -29,7 +31,10 @@ export default class Node extends Component {
         className={`node ${extraClassName}`}
         onMouseDown={() => onMouseDown(row, col)}
         onMouseEnter={() => onMouseEnter(row, col)}
-        onMouseUp={() => onMouseUp()}></td>
+        onMouseUp={() => onMouseUp()}>
+          {isStart ? <MainCharacter/> : null}
+          {isFinish ? <Enemy/> : null}
+        </td>
     );
   }
 }
