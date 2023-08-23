@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import Node from "./Node/Node";
 import { dijkstra } from "../algorithms/dijkstra";
 import { AStar } from "../algorithms/aStar";
@@ -28,6 +28,7 @@ export default class PathfindingVisualizer extends Component {
       currRow: 0,
       currCol: 0,
       isDesktopView: true,
+      executionTime: 0,
     };
 
     this.handleMouseDown = this.handleMouseDown.bind(this);
@@ -323,6 +324,9 @@ export default class PathfindingVisualizer extends Component {
       const finishNode =
         grid[this.state.FINISH_NODE_ROW][this.state.FINISH_NODE_COL];
       let visitedNodesInOrder;
+      const startTime = performance.now();
+      let endTime;
+      let executionTime;
       switch (algo) {
         case "Dijkstra":
           visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
@@ -332,9 +336,19 @@ export default class PathfindingVisualizer extends Component {
           break;
         case "BFS":
           visitedNodesInOrder = bfs(grid, startNode, finishNode);
+          endTime = performance.now();
+          executionTime = endTime - startTime;
+
+          this.setState({ executionTime });
+          console.log("executionTime", executionTime);
           break;
         case "DFS":
           visitedNodesInOrder = dfs(grid, startNode, finishNode);
+          endTime = performance.now();
+          executionTime = endTime - startTime;
+
+          this.setState({ executionTime });
+          console.log("executionTime", executionTime);
           break;
         default:
           // should never get here
@@ -399,6 +413,16 @@ export default class PathfindingVisualizer extends Component {
     const { grid, mouseIsPressed } = this.state;
     return (
       <div>
+        <div className="specifications">
+          <div>
+            <b>Run time: </b>
+            <span id="runTime"> {this.state.executionTime} ms</span>
+          </div>
+          <div>
+            <b>Distance: </b>
+            <span id="distance"> block</span>
+          </div>
+        </div>
         <table
           className="grid-container"
           onMouseLeave={() => this.handleMouseLeave()}
@@ -433,6 +457,7 @@ export default class PathfindingVisualizer extends Component {
             })}
           </tbody>
         </table>
+
         <button
           type="button"
           className="btn btn-danger"

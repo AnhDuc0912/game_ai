@@ -1,13 +1,12 @@
 import React, { Component } from "react";
 import "./Character.css";
 
-
 export default class MainCharacter extends Component {
   render() {
     return (
-      <div class="container">
-        <div class="birds-container">
-           <svg height="25" width="25" viewBox="0 0 400 400">
+      <div className="container">
+        <div className="birds-container">
+          <svg height="25" width="25" viewBox="0 0 400 400">
             <path
               d="M110 150 290 150 350 290 50 290 z"
               stroke="#d1212a"
@@ -203,52 +202,7 @@ export default class MainCharacter extends Component {
               fill="#f5bb19"
               stroke="black"
             />
-
-            {/* <animate
-                xlink:href="#leftPupile"
-                attributeName="cx"
-                from="175"
-                to="185"
-                dur="4s"
-                values="150; 185; 185; 150; 150"
-                keyTimes="0; 0.20; 0.50; 0.7; 1"
-                repeatCount="indefinite"
-                fill="freeze"
-              />
-              <animate
-                xlink:href="#leftPupileInner"
-                attributeName="cx"
-                from="145"
-                to="192"
-                dur="4s"
-                values="145; 192; 192; 145; 145;"
-                keyTimes="0; 0.20; 0.50; 0.7; 1"
-                repeatCount="indefinite"
-                fill="freeze"
-              />
-              <animate
-                xlink:href="#rightPupile"
-                attributeName="cx"
-                from="221"
-                to="247"
-                dur="4s"
-                values="215; 247; 247; 215; 215"
-                keyTimes="0; 0.20; 0.50; 0.7; 1"
-                repeatCount="indefinite"
-                fill="freeze"
-              />
-              <animate
-                xlink:href="#rightPupileInner"
-                attributeName="cx"
-                from="210"
-                to="253"
-                dur="4s"
-                values="210; 253; 253; 210; 210;"
-                keyTimes="0; 0.20; 0.50; 0.7; 1"
-                repeatCount="indefinite"
-                fill="freeze"
-              /> */}
-          </svg> 
+          </svg>
         </div>
       </div>
     );
