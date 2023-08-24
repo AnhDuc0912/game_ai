@@ -1,16 +1,41 @@
 .grid-container {
   margin: 10% auto;
-  margin-top: 20px;
 }
 
 .grid {
   white-space: pre;
 }
 
-button {
-  margin: 2px;
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
-.specifications{
+.result-info {
+  margin-top: 30px;
+}
+
+button {
+  display: flex;
+}
+
+.specifications {
   margin-top: 100px;
 }
+
+.loading-view {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.detailBtn {
+  height: 30px;
+}
+
+.node-path {}
+
+.failure-view {}

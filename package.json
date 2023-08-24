@@ -4,6 +4,10 @@
   "private": true,
   "homepage": "http://prudhvignv.github.io/pathFinderVisualizer",
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.14.5",
+    "lodash": "^4.17.21",
     "node-sass": "^9.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",

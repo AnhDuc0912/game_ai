@@ -4,8 +4,10 @@ import { dijkstra } from "../algorithms/dijkstra";
 import { AStar } from "../algorithms/aStar";
 import { dfs } from "../algorithms/dfs";
 import { bfs } from "../algorithms/bfs";
-
+import CircularProgress from '@mui/material/CircularProgress';
 import "./PathfindingVisualizer.css";
+import { Stack } from "@mui/material";
+import _ from "lodash";
 
 export default class PathfindingVisualizer extends Component {
   constructor() {
@@ -28,7 +30,13 @@ export default class PathfindingVisualizer extends Component {
       currRow: 0,
       currCol: 0,
       isDesktopView: true,
+
+
       executionTime: 0,
+      resultLoading: true,
+      shortestPath: [],
+      algo: null,
+      showDetail: false
     };
 
     this.handleMouseDown = this.handleMouseDown.bind(this);
@@ -76,7 +84,7 @@ export default class PathfindingVisualizer extends Component {
     }
   }
 
-  /******************** Set up the initial grid ********************/
+
   getInitialGrid = (
     rowCount = this.state.ROW_COUNT,
     colCount = this.state.COLUMN_COUNT
@@ -112,7 +120,7 @@ export default class PathfindingVisualizer extends Component {
     };
   };
 
-  /******************** Control mouse events ********************/
+
   handleMouseDown(row, col) {
     if (!this.state.isRunning) {
       if (this.isGridClear()) {
@@ -251,8 +259,6 @@ export default class PathfindingVisualizer extends Component {
     }
   }
 
-  /******************** Clear Board/Walls ********************/
-
   clearGrid() {
     if (!this.state.isRunning) {
       const newGrid = this.state.grid.slice();
@@ -313,9 +319,13 @@ export default class PathfindingVisualizer extends Component {
     }
   }
 
-  /******************** Create Animations ********************/
+
   visualize(algo) {
     if (!this.state.isRunning) {
+
+      this.setState({ isRunning: !this.state.isRunning });
+
+
       this.clearGrid();
       this.toggleIsRunning();
       const { grid } = this.state;
@@ -327,6 +337,11 @@ export default class PathfindingVisualizer extends Component {
       const startTime = performance.now();
       let endTime;
       let executionTime;
+
+
+
+
+
       switch (algo) {
         case "Dijkstra":
           visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
@@ -351,12 +366,16 @@ export default class PathfindingVisualizer extends Component {
           console.log("executionTime", executionTime);
           break;
         default:
-          // should never get here
           break;
       }
       const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
       nodesInShortestPathOrder.push("end");
+
+      this.setState({ shortestPath: nodesInShortestPathOrder })
+
       this.animate(visitedNodesInOrder, nodesInShortestPathOrder);
+
+      this.setState({ isRunning: !this.state.isRunning, algo: algo });
     }
   }
 
@@ -384,7 +403,6 @@ export default class PathfindingVisualizer extends Component {
     }
   }
 
-  /******************** Create path from start to finish ********************/
   animateShortestPath(nodesInShortestPathOrder) {
     for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
       if (nodesInShortestPathOrder[i] === "end") {
@@ -412,21 +430,12 @@ export default class PathfindingVisualizer extends Component {
   render() {
     const { grid, mouseIsPressed } = this.state;
     return (
-      <div>
-        <div className="specifications">
-          <div>
-            <b>Run time: </b>
-            <span id="runTime"> {this.state.executionTime} ms</span>
-          </div>
-          <div>
-            <b>Distance: </b>
-            <span id="distance"> block</span>
-          </div>
-        </div>
+      <Stack
+        spacing="20px"
+        direction='row'>
         <table
           className="grid-container"
-          onMouseLeave={() => this.handleMouseLeave()}
-        >
+          onMouseLeave={() => this.handleMouseLeave()}>
           <tbody className="grid">
             {grid.map((row, rowIdx) => {
               return (
@@ -458,73 +467,76 @@ export default class PathfindingVisualizer extends Component {
           </tbody>
         </table>
 
-        <button
-          type="button"
-          className="btn btn-danger"
-          onClick={() => this.clearGrid()}
-        >
-          Clear Grid
-        </button>
-        <button
-          type="button"
-          className="btn btn-warning"
-          onClick={() => this.clearWalls()}
-        >
-          Clear Walls
-        </button>
-        {/* <button
-          type="button"
-          className="btn btn-primary"
-          onClick={() => this.visualize("Dijkstra")}
-        >
-          Dijkstra's
-        </button> */}
-        {/* <button
-          type="button"
-          className="btn btn-primary"
-          onClick={() => this.visualize("AStar")}
-        >
-          A*
-        </button> */}
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={() => this.visualize("BFS")}
-        >
-          Bread First Search
-        </button>
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={() => this.visualize("DFS")}
-        >
-          Depth First Search
-        </button>
-        {this.state.isDesktopView ? (
-          <button
-            type="button"
-            className="btn btn-light"
-            onClick={() => this.toggleView()}
-          >
-            Mobile View
-          </button>
-        ) : (
-          <button
-            type="button"
-            className="btn btn-dark"
-            onClick={() => this.toggleView()}
-          >
-            Desktop View
-          </button>
-        )}
-      </div>
+
+        <div className="dashboard">
+
+          <Stack
+            direction='column'
+            spacing='10px'>
+            <button
+              type="button"
+              className="btn btn-danger"
+              onClick={() => this.clearGrid()}>
+              Reset
+            </button>
+            <button
+              type="button"
+              className="btn btn-warning"
+              onClick={() => this.clearWalls()}>
+              Xóa tường
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => this.visualize("BFS")}>
+              Tìm theo BFS
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => this.visualize("DFS")}>
+              Tìm theo DFS
+            </button>
+          </Stack>
+
+          <div className="result-info">
+            <h4>Kết quả tìm kiếm</h4>
+            {this.state.isRunning
+              ? <div className="loading-view">
+                <CircularProgress color="inherit" />
+              </div>
+              : (!_.isEmpty(this.state.shortestPath) &&
+                <div>
+                  <p>Thuận toán:  <span>{this.state.algo}</span></p>
+                  <p>Thời gian thực thi:  <span>{this.state.executionTime}</span></p>
+                  <p>Đường đi ngắn nhất:  <span>{this.state.shortestPath.length - 2}</span></p>
+                  <button
+                    onClick={() => this.setState({ showDetail: !this.state.showDetail })}
+                    className="detailBtn">{!this.state.showDetail ? "Xem" : "Ẩn"} chi tiết đường đi</button>
+
+                  {this.state.showDetail && _.map(this.state.shortestPath, ({ col, row }) => {
+                    if (col === undefined && row === undefined) {
+                      return (<p>Kết thúc</p>)
+                    }
+                    return (
+                      <p className="node-path">
+                        [{col}, {row}]
+                      </p>
+                    );
+                  })}
+                </div>
+              )
+            }
+          </div>
+        </div>
+      </Stack>
     );
   }
 }
 
-/******************** Create Walls ********************/
+
 const getNewGridWithWallToggled = (grid, row, col) => {
-  // mouseDown starts to act strange if I don't make newGrid and work off of grid instead.
+
   const newGrid = grid.slice();
   const node = newGrid[row][col];
   if (!node.isStart && !node.isFinish && node.isNode) {
@@ -537,8 +549,7 @@ const getNewGridWithWallToggled = (grid, row, col) => {
   return newGrid;
 };
 
-// Backtracks from the finishNode to find the shortest path.
-// Only works when called after the pathfinding methods.
+
 function getNodesInShortestPathOrder(finishNode) {
   const nodesInShortestPathOrder = [];
   let currentNode = finishNode;
