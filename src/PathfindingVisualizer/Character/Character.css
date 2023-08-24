@@ -630,3 +630,7 @@
     width: 80%;
     background: #FFC000;
 }
+
+.birds-container img{
+    user-select: none;
+}

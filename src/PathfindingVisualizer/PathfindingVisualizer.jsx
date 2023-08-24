@@ -1,10 +1,10 @@
-import React, { Component, useEffect } from "react";
+import React, { Component } from "react";
 import Node from "./Node/Node";
 import { dijkstra } from "../algorithms/dijkstra";
 import { AStar } from "../algorithms/aStar";
 import { dfs } from "../algorithms/dfs";
 import { bfs } from "../algorithms/bfs";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
 import "./PathfindingVisualizer.css";
 import { Stack } from "@mui/material";
 import _ from "lodash";
@@ -31,12 +31,11 @@ export default class PathfindingVisualizer extends Component {
       currCol: 0,
       isDesktopView: true,
 
-
       executionTime: 0,
       resultLoading: true,
       shortestPath: [],
       algo: null,
-      showDetail: false
+      showDetail: false,
     };
 
     this.handleMouseDown = this.handleMouseDown.bind(this);
@@ -84,7 +83,6 @@ export default class PathfindingVisualizer extends Component {
     }
   }
 
-
   getInitialGrid = (
     rowCount = this.state.ROW_COUNT,
     colCount = this.state.COLUMN_COUNT
@@ -119,7 +117,6 @@ export default class PathfindingVisualizer extends Component {
       isNode: true,
     };
   };
-
 
   handleMouseDown(row, col) {
     if (!this.state.isRunning) {
@@ -319,12 +316,9 @@ export default class PathfindingVisualizer extends Component {
     }
   }
 
-
   visualize(algo) {
     if (!this.state.isRunning) {
-
       this.setState({ isRunning: !this.state.isRunning });
-
 
       this.clearGrid();
       this.toggleIsRunning();
@@ -337,10 +331,6 @@ export default class PathfindingVisualizer extends Component {
       const startTime = performance.now();
       let endTime;
       let executionTime;
-
-
-
-
 
       switch (algo) {
         case "Dijkstra":
@@ -371,7 +361,7 @@ export default class PathfindingVisualizer extends Component {
       const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
       nodesInShortestPathOrder.push("end");
 
-      this.setState({ shortestPath: nodesInShortestPathOrder })
+      this.setState({ shortestPath: nodesInShortestPathOrder });
 
       this.animate(visitedNodesInOrder, nodesInShortestPathOrder);
 
@@ -430,12 +420,11 @@ export default class PathfindingVisualizer extends Component {
   render() {
     const { grid, mouseIsPressed } = this.state;
     return (
-      <Stack
-        spacing="20px"
-        direction='row'>
+      <Stack spacing="20px" direction="row">
         <table
           className="grid-container"
-          onMouseLeave={() => this.handleMouseLeave()}>
+          onMouseLeave={() => this.handleMouseLeave()}
+        >
           <tbody className="grid">
             {grid.map((row, rowIdx) => {
               return (
@@ -467,66 +456,83 @@ export default class PathfindingVisualizer extends Component {
           </tbody>
         </table>
 
-
         <div className="dashboard">
-
-          <Stack
-            direction='column'
-            spacing='10px'>
+          <Stack direction="column" spacing="10px">
             <button
               type="button"
               className="btn btn-danger"
-              onClick={() => this.clearGrid()}>
+              onClick={() => this.clearGrid()}
+            >
               Reset
             </button>
             <button
               type="button"
               className="btn btn-warning"
-              onClick={() => this.clearWalls()}>
+              onClick={() => this.clearWalls()}
+            >
               Xóa tường
             </button>
             <button
               type="button"
               className="btn btn-primary"
-              onClick={() => this.visualize("BFS")}>
+              onClick={() => this.visualize("BFS")}
+            >
               Tìm theo BFS
             </button>
             <button
               type="button"
               className="btn btn-primary"
-              onClick={() => this.visualize("DFS")}>
+              onClick={() => this.visualize("DFS")}
+            >
               Tìm theo DFS
             </button>
           </Stack>
 
           <div className="result-info">
             <h4>Kết quả tìm kiếm</h4>
-            {this.state.isRunning
-              ? <div className="loading-view">
+            {this.state.isRunning ? (
+              <div className="loading-view">
                 <CircularProgress color="inherit" />
               </div>
-              : (!_.isEmpty(this.state.shortestPath) &&
+            ) : (
+              !_.isEmpty(this.state.shortestPath) && (
                 <div>
-                  <p>Thuận toán:  <span>{this.state.algo}</span></p>
-                  <p>Thời gian thực thi:  <span>{this.state.executionTime}</span></p>
-                  <p>Đường đi ngắn nhất:  <span>{this.state.shortestPath.length - 2}</span></p>
+                  <p>
+                    Thuận toán: <span>{this.state.algo}</span>
+                  </p>
+                  <p>
+                    Thời gian thực thi:{" "}
+                    <span>{this.state.executionTime.toFixed(10)} ms</span>
+                  </p>
+                  <p>
+                    Đường đi: <span>{this.state.shortestPath.length - 2}</span>
+                  </p>
                   <button
-                    onClick={() => this.setState({ showDetail: !this.state.showDetail })}
-                    className="detailBtn">{!this.state.showDetail ? "Xem" : "Ẩn"} chi tiết đường đi</button>
-
-                  {this.state.showDetail && _.map(this.state.shortestPath, ({ col, row }) => {
-                    if (col === undefined && row === undefined) {
-                      return (<p>Kết thúc</p>)
+                    onClick={() =>
+                      this.setState({ showDetail: !this.state.showDetail })
                     }
-                    return (
-                      <p className="node-path">
-                        [{col}, {row}]
-                      </p>
-                    );
-                  })}
+                    className="btn btn-primary"
+                  >
+                    {!this.state.showDetail ? "Xem" : "Ẩn"} chi tiết đường đi
+                  </button>
+                  <div class="scroll-view">
+                    <div class="content">
+                      {this.state.showDetail &&
+                        _.map(this.state.shortestPath, ({ col, row }, index) => {
+                          if (col === undefined && row === undefined) {
+                            return <p>Kết thúc</p>;
+                          }
+                          return (
+                            <p className="node-path">
+                              {index}: [{col}, {row}]
+                            </p>
+                          );
+                        })}
+                    </div>
+                  </div>
                 </div>
               )
-            }
+            )}
           </div>
         </div>
       </Stack>
@@ -534,9 +540,7 @@ export default class PathfindingVisualizer extends Component {
   }
 }
 
-
 const getNewGridWithWallToggled = (grid, row, col) => {
-
   const newGrid = grid.slice();
   const node = newGrid[row][col];
   if (!node.isStart && !node.isFinish && node.isNode) {
@@ -548,7 +552,6 @@ const getNewGridWithWallToggled = (grid, row, col) => {
   }
   return newGrid;
 };
-
 
 function getNodesInShortestPathOrder(finishNode) {
   const nodesInShortestPathOrder = [];

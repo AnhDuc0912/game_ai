@@ -36,6 +36,17 @@ button {
   height: 30px;
 }
 
-.node-path {}
+.result-info {
+  max-height: 450px;
+}
 
-.failure-view {}
+.scroll-view {
+  margin-top: 20px;
+  width: 300px;
+  height: 200px;
+  overflow: auto;
+}
+
+.content {
+  padding: 10px;
+}
