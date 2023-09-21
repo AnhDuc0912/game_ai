@@ -16,6 +16,10 @@
   margin-top: 30px;
 }
 
+table{
+  background-image: url(../assets/sand.avif);
+}
+
 button {
   display: flex;
 }

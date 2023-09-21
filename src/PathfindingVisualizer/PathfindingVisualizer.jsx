@@ -8,6 +8,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 import "./PathfindingVisualizer.css";
 import { Stack } from "@mui/material";
 import _ from "lodash";
+import { greedySearch } from "../algorithms/greedySearch";
+import sound from "../assets/loading.mp3";
 
 export default class PathfindingVisualizer extends Component {
   constructor() {
@@ -15,9 +17,9 @@ export default class PathfindingVisualizer extends Component {
     this.state = {
       grid: [],
       START_NODE_ROW: 5,
-      FINISH_NODE_ROW: 5,
       START_NODE_COL: 5,
-      FINISH_NODE_COL: 15,
+      FINISH_NODE_ROW: 10,
+      FINISH_NODE_COL: 30,
       mouseIsPressed: false,
       ROW_COUNT: 25,
       COLUMN_COUNT: 35,
@@ -355,6 +357,22 @@ export default class PathfindingVisualizer extends Component {
           this.setState({ executionTime });
           console.log("executionTime", executionTime);
           break;
+        case "ASTAR":
+          visitedNodesInOrder = AStar(grid, startNode, finishNode);
+          endTime = performance.now();
+          executionTime = endTime - startTime;
+
+          this.setState({ executionTime });
+          console.log("executionTime", executionTime);
+          break;
+        case "GREEDY":
+          visitedNodesInOrder = greedySearch(grid, startNode, finishNode);
+          endTime = performance.now();
+          executionTime = endTime - startTime;
+
+          this.setState({ executionTime });
+          console.log("executionTime", executionTime);
+          break;
         default:
           break;
       }
@@ -486,6 +504,13 @@ export default class PathfindingVisualizer extends Component {
             >
               Tìm theo DFS
             </button>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => this.visualize("ASTAR")}
+            >
+              Tìm theo A*
+            </button>
           </Stack>
 
           <div className="result-info">
@@ -493,6 +518,10 @@ export default class PathfindingVisualizer extends Component {
             {this.state.isRunning ? (
               <div className="loading-view">
                 <CircularProgress color="inherit" />
+                <audio style={{ visibility: "hidden" }} controls loop autoPlay>
+                  {" "}
+                  <source src={sound} type="audio/mpeg" />
+                </audio>
               </div>
             ) : (
               !_.isEmpty(this.state.shortestPath) && (
@@ -502,7 +531,7 @@ export default class PathfindingVisualizer extends Component {
                   </p>
                   <p>
                     Thời gian thực thi:{" "}
-                    <span>{this.state.executionTime.toFixed(10)} ms</span>
+                    <span>{this.state.executionTime.toFixed(10)} s</span>
                   </p>
                   <p>
                     Đường đi: <span>{this.state.shortestPath.length - 2}</span>
@@ -518,16 +547,19 @@ export default class PathfindingVisualizer extends Component {
                   <div class="scroll-view">
                     <div class="content">
                       {this.state.showDetail &&
-                        _.map(this.state.shortestPath, ({ col, row }, index) => {
-                          if (col === undefined && row === undefined) {
-                            return <p>Kết thúc</p>;
+                        _.map(
+                          this.state.shortestPath,
+                          ({ col, row }, index) => {
+                            if (col === undefined && row === undefined) {
+                              return <p>Kết thúc</p>;
+                            }
+                            return (
+                              <p className="node-path">
+                                {index}: [{col}, {row}]
+                              </p>
+                            );
                           }
-                          return (
-                            <p className="node-path">
-                              {index}: [{col}, {row}]
-                            </p>
-                          );
-                        })}
+                        )}
                     </div>
                   </div>
                 </div>

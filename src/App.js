@@ -1,26 +1,32 @@
 import React from 'react';
 import './App.css';
-import PathfindingVisualizer from './PathfindingVisualizer/PathfindingVisualizer';
-import { Container } from '@mui/material';
-import { display } from '@mui/system';
-import { red } from '@mui/material/colors';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { publicRoutes } from './routes';
 
 function App() {
   return (
-    <Container fixed>
-      <div style={{ marginTop: '100px' }}>
-        <PathfindingVisualizer />
+    <Router>
+      <div className="App">
+        <Routes>
+          {publicRoutes.map((route, index) => {
+              const Element = route.component;
+              const Layout = route.layout;
+
+              return (
+                <Route 
+                  key={index} 
+                  path={route.path} 
+                  element={
+                    <Layout>
+                      <Element/>
+                    </Layout>
+                  } 
+                />
+              );
+            })}
+        </Routes>
       </div>
-      <div style={{ marginTop: '100px' }}>
-        <h4>
-          Bài tập số 1 môn Trí tuệ nhân tạo
-        </h4>
-        <h5>GV hướng dẫn: Cô Đặng Thị Phúc<b style={{ fontSize: '1.5rem', color: 'pick' }}> xinh đẹp</b>  <span style={{ color: '#e25555' }}>&#9829;</span></h5>
-        <h5>Nhóm trưởng: Nguyễn Quốc Huy</h5>
-        <h5>Phạm Quốc Anh Đức</h5>
-        <h5>Võ Dương Khang</h5>
-      </div>
-    </Container>
+    </Router>
   );
 }
 

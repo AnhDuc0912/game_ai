@@ -1,16 +1,8 @@
 .node {
   width: 25px;
   height: 25px;
-  outline: 1px solid rgb(175, 216, 248);
+  /* outline: 1px solid rgb(156, 180, 199); */
   display: inline-block;
-}
-
-.node-finish {
-  background-color: red;
-}
-
-.node-start {
-  background-color: green;
 }
 
 .node-visited {
@@ -44,10 +36,6 @@
     transform: scale(1);
     background-color: rgba(0, 218, 69, 0.75);
   }
-}
-
-.node-wall {
-  background-color: rgb(12, 53, 71);
 }
 
 .node-shortest-path {

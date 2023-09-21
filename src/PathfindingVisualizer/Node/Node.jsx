@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import './Node.css';
 import MainCharacter from '../Character/MainCharacter';
 import Enemy from '../Character/Enemy';
+import Bomb from '../Character/Bomb';
 
 export default class Node extends Component {
   render() {
@@ -34,6 +35,7 @@ export default class Node extends Component {
         onMouseUp={() => onMouseUp()}>
           {isStart ? <MainCharacter/> : null}
           {isFinish ? <Enemy/> : null}
+          {isWall? <Bomb/> : null}
         </td>
     );
   }
